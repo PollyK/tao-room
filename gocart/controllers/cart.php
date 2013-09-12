@@ -306,6 +306,11 @@ class Cart extends Front_Controller {
 
     function add_to_cart() {
         // Get our inputs
+        
+        $this->db->query("select * from system_products");
+        
+        
+        
         $product_id = $this->input->post('id');
         $quantity = $this->input->post('quantity');
         $post_options = $this->input->post('option');
@@ -315,6 +320,12 @@ class Cart extends Front_Controller {
 
         //if out of stock purchase is disabled, check to make sure there is inventory to support the cart.
 
+        $sqls = $this->db->queries;
+            $sqls = array_reverse($sqls);
+            $sqls = array_slice($sqls, 0, 50); 
+            var_dump($sqls);die;
+        
+        
         if (!$this->config->item('allow_os_purchase') && (bool) $product['track_stock']) {
             $stock = $this->Product_model->get_product($product_id);
 
@@ -363,17 +374,18 @@ class Cart extends Front_Controller {
             $this->go_cart->insert($product);
             //var_dump($this->go_cart->total_items());die;
 
-            $data['page_title'] = 'View Cart';
-            $data['gift_cards_enabled'] = $this->gift_cards_enabled;
-            $this->load->view('view_cart', $data);
-
-//            /redirect('cart/view_cart', 'refresh');
+//            $data['page_title'] = 'View Cart';
+//            $data['gift_cards_enabled'] = $this->gift_cards_enabled;
+//            $this->load->view('view_cart', $data);
+            
+            $this->output->enable_profiler(true);
+                
+            redirect('cart/view_cart');
         }
     }
 
     function view_cart() {
-//        var_dump($this->session->userdata('cart_contents'));die;
-
+        var_dump($this->go_cart->total_items());die;
         $data['page_title'] = 'View Cart';
         $data['gift_cards_enabled'] = $this->gift_cards_enabled;
 

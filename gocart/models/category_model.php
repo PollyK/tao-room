@@ -6,19 +6,19 @@ Class Category_model extends CI_Model {
         if ($parent !== false) {
             $this->db->where('parent_id', $parent);
         }
-        $this->db->select('id');
+        //$this->db->select('id');
         $this->db->order_by('categories.sequence', 'ASC');
 
         //this will alphabetize them if there is no sequence
         $this->db->order_by('name', 'ASC');
         $result = $this->db->get('categories');
+//        var_dump($result->result());die;
+//        $categories = array();
+//        foreach ($result->result() as $cat) {
+//            $categories[] = $this->get_category($cat->id);
+//        }
 
-        $categories = array();
-        foreach ($result->result() as $cat) {
-            $categories[] = $this->get_category($cat->id);
-        }
-
-        return $categories;
+        return $result->result();
     }
 
     function get_category_tree($last_node_id) {
